@@ -572,19 +572,11 @@ Gtk::Widget *Preferences::getDynamicProfilePanel()
     swDynamicProfile = Gtk::manage(new Gtk::ScrolledWindow());
     swDynamicProfile->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
 
+    Gtk::Box* vbProfiles = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
+    vbProfiles->set_spacing(4);
+
     dynProfilePanel = Gtk::manage(new DynamicProfilePanel());
-
-    swDynamicProfile->add(*dynProfilePanel);
-    return swDynamicProfile;
-}
-
-
-Gtk::Widget* Preferences::getImageProcessingPanel ()
-{
-    swImageProcessing = Gtk::manage(new Gtk::ScrolledWindow());
-    swImageProcessing->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-
-    Gtk::Box* vbImageProcessing = Gtk::manage (new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
+    vbProfiles->pack_start(*dynProfilePanel, Gtk::PACK_EXPAND_WIDGET, 4);
 
     Gtk::Frame* fpp = Gtk::manage(new Gtk::Frame(M("PREFERENCES_IMPROCPARAMS")));
     Gtk::Box* vbpp = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
@@ -614,9 +606,8 @@ Gtk::Widget* Preferences::getImageProcessingPanel ()
     bpconn = useBundledProfiles->signal_clicked().connect(sigc::mem_fun(*this, &Preferences::bundledProfilesChanged));
     vbpp->pack_start(*useBundledProfiles, Gtk::PACK_SHRINK, 4);
     fpp->add(*vbpp);
-    vbImageProcessing->pack_start (*fpp, Gtk::PACK_SHRINK, 4);
+    vbProfiles->pack_start(*fpp, Gtk::PACK_SHRINK, 4);
 
-    // Custom profile builder box
     Gtk::Frame* cpfrm = Gtk::manage(new Gtk::Frame(M("PREFERENCES_CUSTPROFBUILD")));
     Gtk::Label* cplab = Gtk::manage(new Gtk::Label(M("PREFERENCES_CUSTPROFBUILDPATH") + ":", Gtk::ALIGN_START));
     txtCustProfBuilderPath = Gtk::manage(new Gtk::Entry());
@@ -634,7 +625,7 @@ Gtk::Widget* Preferences::getImageProcessingPanel ()
     cpbt->attach(*cpltypelab, 0, 1, 1, 1);
     cpbt->attach(*custProfBuilderLabelType, 1, 1, 1, 1);
     cpfrm->add(*cpbt);
-    vbImageProcessing->pack_start (*cpfrm, Gtk::PACK_SHRINK, 4);
+    vbProfiles->pack_start(*cpfrm, Gtk::PACK_SHRINK, 4);
 
     Gtk::Frame* fdp = Gtk::manage(new Gtk::Frame(M("PREFERENCES_PROFILEHANDLING")));
     Gtk::Grid* vbdp = Gtk::manage(new Gtk::Grid());
@@ -642,8 +633,8 @@ Gtk::Widget* Preferences::getImageProcessingPanel ()
     saveParamsPreference->append(M("PREFERENCES_PROFILESAVEINPUT"));
     saveParamsPreference->append(M("PREFERENCES_PROFILESAVECACHE"));
     saveParamsPreference->append(M("PREFERENCES_PROFILESAVEBOTH"));
-    Gtk::Label *splab = Gtk::manage (new Gtk::Label (M ("PREFERENCES_PROFILESAVELOCATION") + ":", Gtk::ALIGN_START));
-    Gtk::Label* lplab = Gtk::manage (new Gtk::Label (M ("PREFERENCES_PROFILELOADPR") + ":", Gtk::ALIGN_START));
+    Gtk::Label *splab = Gtk::manage(new Gtk::Label(M("PREFERENCES_PROFILESAVELOCATION") + ":", Gtk::ALIGN_START));
+    Gtk::Label* lplab = Gtk::manage(new Gtk::Label(M("PREFERENCES_PROFILELOADPR") + ":", Gtk::ALIGN_START));
     loadParamsPreference = Gtk::manage(new Gtk::ComboBoxText());
     loadParamsPreference->append(M("PREFERENCES_PROFILEPRCACHE"));
     loadParamsPreference->append(M("PREFERENCES_PROFILEPRFILE"));
@@ -653,7 +644,21 @@ Gtk::Widget* Preferences::getImageProcessingPanel ()
     vbdp->attach(*lplab, 0, 1, 1, 1);
     vbdp->attach(*loadParamsPreference, 1, 1, 1, 1);
     fdp->add(*vbdp);
-    vbImageProcessing->pack_start (*fdp, Gtk::PACK_SHRINK, 4);
+    vbProfiles->pack_start(*fdp, Gtk::PACK_SHRINK, 4);
+
+    swDynamicProfile->add(*vbProfiles);
+    return swDynamicProfile;
+}
+
+
+Gtk::Widget* Preferences::getImageProcessingPanel ()
+{
+    swImageProcessing = Gtk::manage(new Gtk::ScrolledWindow());
+    swImageProcessing->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+
+    Gtk::Box* vbImageProcessing = Gtk::manage (new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
+
+
 
     // Metadata
     Gtk::Frame *mf = Gtk::manage(new Gtk::Frame(M("PREFERENCES_METADATA")));
